@@ -1,12 +1,43 @@
-# stomp-websockets-java-client
-A fork of the Spring Boot websocket example project with a working pure java client
+# Stomp Websockets Example with Java Client
 
-https://spring.io/guides/gs/messaging-stomp-websocket/
+## General 
 
-I couldn't find a working pure java client for the Spring boot stomp websockets demo above - 
+This is a fork of https://nickebbutt/stomp-websockets-java-client added with the following aspects:
 
-This project contains the original spring boot server application and a separate java client module
+  * Spring Security : Login & In Memory Authentification
+  * Selective User based notification 
+  * Optional notification to all logged in Users
+ 
+## Usage
 
-Run the server by using the spring-boot:run command on the maven spring-boot plugin 
-You can point a web browser at localhost:8080 to say hello from the browser, or run 
-the class HelloClient in the client module to do the same thing from the java client
+1. Start /stomp-greeting-server/src/main/java/chat/TestChatServer.java
+2. Open various Browser Instance. Macos in Terminal: open -n /Applications/Safari.app
+3. http://localhost:8080
+4. Login either as tu01, tu11 or tu21. With password being _pass suffixed to the username
+5. Connect 
+6. Enter a shout with a to = being a logged in user or to being empty ->  to all 
+7. The shout should be displayed, after a couple of secs for the respective user(s)
+
+
+## Implementation Notes
+
+In order to recieve notifications for all and user specfic, the Stomp client must subscribe to two topics:
+
+```javascript
+	stompClient.subscribe('/topic/shouts', function(shout){
+       showShout(JSON.parse(shout.body).content);
+    });
+    stompClient.subscribe('/user/topic/shouts', function(shout){
+        showShout(JSON.parse(shout.body).content);
+    });
+```
+   
+In chat.ChatController the messaging is done not with the Annotation @SendTo but using org.springframework.messaging.simp.SimpMessagingTemplate, which provides also and API for sending messages to a specific user, in order to cover both cases:
+
+```java 
+	if (all) {
+		messagingTemplate.convertAndSend(TOPIC_SHOUTS,shout);
+	} else {
+		messagingTemplate.convertAndSendToUser(message.getTo().trim(),TOPIC_SHOUTS, shout);
+	}
+```

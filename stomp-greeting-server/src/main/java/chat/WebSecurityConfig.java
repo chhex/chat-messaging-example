@@ -21,11 +21,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     auth
       // Defines three users with their passwords and roles
       .inMemoryAuthentication()
-      .withUser("UserA").password("UserA").roles("USER")
+      .withUser("tu01").password("tu01_pass").roles("USER")
       .and()
-      .withUser("UserB").password("UserB").roles("USER")
+      .withUser("tu11").password("tu11_pass").roles("USER")
       .and()
-      .withUser("UserC").password("UserC").roles("USER");
+      .withUser("tu21").password("tu21_pass").roles("USER");
     return;
   }
   
