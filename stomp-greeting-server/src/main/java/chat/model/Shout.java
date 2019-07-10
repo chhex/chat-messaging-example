@@ -1,10 +1,10 @@
-package hello.pojo;
+package chat.model;
 
-public class Greeting {
+public class Shout {
 
     private String content;
 
-    public Greeting(String content) {
+    public Shout(String content) {
         this.content = content;
     }
 

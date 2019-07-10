@@ -15,13 +15,13 @@
         }
 
         function connect() {
-            var socket = new SockJS('/hello');
+            var socket = new SockJS('/chat');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, function(frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/greetings', function(greeting){
-                    showGreeting(JSON.parse(greeting.body).content);
+                stompClient.subscribe('/topic/shouts', function(shout){
+                    showShout(JSON.parse(shout.body).content);
                 });
             });
         }
@@ -34,12 +34,12 @@
             console.log("Disconnected");
         }
 
-        function sendName() {
-            var name = document.getElementById('name').value;
-            stompClient.send("/app/hello", {}, JSON.stringify({ 'name': name }));
+        function sendShout() {
+            var chatText = document.getElementById('shout').value;
+            stompClient.send("/app/chat", {}, JSON.stringify({ 'chatText': chatText }));
         }
 
-        function showGreeting(message) {
+        function showShout(message) {
             var response = document.getElementById('response');
             var p = document.createElement('p');
             p.style.wordWrap = 'break-word';
@@ -57,8 +57,8 @@
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
     </div>
     <div id="conversationDiv">
-        <label>What is your name?</label><input type="text" id="name" />
-        <button id="sendName" onclick="sendName();">Send</button>
+        <label>Shout something</label><input type="text" id="shout" />
+        <button id="sendShout" onclick="sendShout();">Send</button>
         <p id="response"></p>
     </div>
 </div>
