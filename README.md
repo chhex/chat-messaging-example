@@ -13,7 +13,7 @@ This is a fork of https://nickebbutt/stomp-websockets-java-client added with the
 1. Start /stomp-greeting-server/src/main/java/chat/TestChatServer.java
 2. Open various Browser Instance. Macos in Terminal: open -n /Applications/Safari.app
 3. http://localhost:8080
-4. Login either as tu01, tu11 or tu21. With password being _pass suffixed to the username
+4. Login either as u01, u11 or u21. With password being same as username
 5. Connect 
 6. Enter a shout with a to = being a logged in user or to being empty ->  to all 
 7. The shout should be displayed, after a couple of secs for the respective user(s)
@@ -24,7 +24,7 @@ This is a fork of https://nickebbutt/stomp-websockets-java-client added with the
 In order to recieve notifications for all and user specfic, the Stomp client must subscribe to two topics:
 
 ```javascript
-	stompClient.subscribe('/topic/shouts', function(shout){
+stompClient.subscribe('/topic/shouts', function(shout){
        showShout(JSON.parse(shout.body).content);
     });
     stompClient.subscribe('/user/topic/shouts', function(shout){

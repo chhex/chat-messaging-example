@@ -15,9 +15,13 @@
         }
 
         function connect() {
+        	var headerName = "${_csrf.headerName}";
+        	var token = "${_csrf.token}";
+        	var headers = {};
+        	headers[headerName] = token;
             var socket = new SockJS('/chat');
             stompClient = Stomp.over(socket);
-            stompClient.connect({}, function(frame) {
+            stompClient.connect(headers, function(frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/shouts', function(shout){
@@ -29,6 +33,8 @@
             });
           
         }
+        
+        
 
         function disconnect() {
             if (stompClient != null) {
