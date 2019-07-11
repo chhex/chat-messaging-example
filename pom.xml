@@ -8,7 +8,7 @@
 	<name>Java Stomp Client to Spring Boot Demo Server</name>
 	<modules>
         <module>stomp-java-client</module>
-        <module>stomp-greeting-server</module>
+        <module>stomp-server</module>
         <module>stomp-common</module>
 
     </modules>
