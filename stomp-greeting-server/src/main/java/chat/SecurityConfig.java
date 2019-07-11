@@ -33,18 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.csrf()
-				// ignore our stomp endpoints since they are protected using Stomp headers
-	            .ignoringAntMatchers("/chat/**")
-				.and()
-			      .headers()
-			        .frameOptions().sameOrigin()
-			      .and()
-				.authorizeRequests()
-//	            .antMatchers("/chat/**")
-//	            .permitAll()
-//	            .and()
-//	            .authorizeRequests()
+				.csrf().disable()
+		        .authorizeRequests()
+	            .antMatchers("/chat/**")
+	            .permitAll()
+	            .and()
+	            .authorizeRequests()
 				.anyRequest()
 				.authenticated()
 				.and().formLogin().

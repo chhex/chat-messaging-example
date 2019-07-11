@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Hello WebSocket</title>
+    <script src="jquery-3.4.1.min.js"></script>
     <script src="sockjs-0.3.4.js"></script>
     <script src="stomp.js"></script>
     <script type="text/javascript">
@@ -14,28 +15,28 @@
             document.getElementById('response').innerHTML = '';
         }
 
-        function connect() {
-        	var headerName = "${_csrf.headerName}";
-        	var token = "${_csrf.token}";
+        async function connect() {
         	var headers = {};
-        	headers[headerName] = token;
+        	var response = await fetch('http://localhost:8080/getUserSessionId');
+        	var myJson = await response.json(); //extract JSON from the http response
+        	document.getElementById('userSessionId').value = myJson
             var socket = new SockJS('/chat');
             stompClient = Stomp.over(socket);
             stompClient.connect(headers, function(frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/shouts', function(shout){
+                stompClient.subscribe('/topic/shouts/all', function(shout){
                     showShout(JSON.parse(shout.body).content);
                 });
-                stompClient.subscribe('/user/topic/shouts', function(shout){
+                stompClient.subscribe('/topic/shouts/usersession.' + myJson, function(shout){
                     showShout(JSON.parse(shout.body).content);
-                });
+                }); 
             });
           
         }
         
+       
         
-
         function disconnect() {
             if (stompClient != null) {
                 stompClient.disconnect();
@@ -47,7 +48,12 @@
         function sendShout() {
             var chatText = document.getElementById('shout').value;
             var to = document.getElementById('to').value;
-            stompClient.send("/app/chat", {}, JSON.stringify({ 'chatText': chatText , 'to' : to}));
+            if (to === "") {
+           		 stompClient.send("/app/chat/all", {}, JSON.stringify({ 'chatText': chatText , 'to' : to}));
+            } else {
+            	stompClient.send("/app/chat/" + to, {}, JSON.stringify({ 'chatText': chatText , 'to' : to}));
+            }
+           		 
         }
 
         function showShout(message) {
@@ -68,6 +74,8 @@
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
     </div>
     <div id="conversationDiv">
+      	<label>User Session Id: </label><input type="text" id="userSessionId" readonly />
+       	 <p id="lbreak"></p>
         <label>Shout something</label><input type="text" id="shout" />
         <label>to </label><input type="text" id="to" />
         <label> ALL for to all</label>

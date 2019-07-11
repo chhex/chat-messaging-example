@@ -53,12 +53,9 @@ import chat.model.Shout;
 public class ChatClient {
 
 	private static Logger logger = Logger.getLogger(ChatClient.class);
-	
-	private CloseableHttpClient httpClient;
-	
-	private BasicCookieStore cookieStore;
 
-	public ListenableFuture<StompSession> connect(CsrfTokenBean csrfToken) {
+
+	public ListenableFuture<StompSession> connect() {
 
 		WebSocketClient client = new StandardWebSocketClient();
 		WebSocketStompClient stompClient = new WebSocketStompClient(client);
@@ -66,12 +63,7 @@ public class ChatClient {
 		StompSessionHandler sessionHandler = new MyStompSessionHandler();
 		stompClient.setTaskScheduler(new ConcurrentTaskScheduler());
 		StompHeaders connectHeaders = new StompHeaders();
-		connectHeaders.add(csrfToken.getHeaderName(), csrfToken.getToken());
 		WebSocketHttpHeaders webSocketHttpHeaders = new WebSocketHttpHeaders();
-		for (Cookie cookie : cookieStore.getCookies()) {
-			System.out.println(cookie.getName() + ":" + cookie.getValue());
-			webSocketHttpHeaders.add(cookie.getName(), cookie.getValue());
-		}
 		return stompClient.connect("ws://localhost:8080/chat/websocket", webSocketHttpHeaders, connectHeaders,
 				sessionHandler);
 	}
@@ -114,75 +106,15 @@ public class ChatClient {
 
 	}
 
-	private CsrfTokenBean login(String user) throws IOException, URISyntaxException {
-		HttpHost targetHost = new HttpHost("localhost", 8080, "http");
-		CredentialsProvider provider = new BasicCredentialsProvider();
-		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("u21", "u21");
-		provider.setCredentials(AuthScope.ANY, credentials);
-		AuthCache authCache = new BasicAuthCache();
-		authCache.put(targetHost, new BasicScheme());
-		HttpClientContext context = HttpClientContext.create();
-		context.setCredentialsProvider(provider);
-		context.setAuthCache(authCache);
 
-		cookieStore = new BasicCookieStore();
-		httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-		HttpGet securedResource = new HttpGet("http://localhost:8080");
-		HttpResponse httpResponse = httpClient.execute(securedResource, context);
-		HttpEntity responseEntity = httpResponse.getEntity();
-		String strResponse = EntityUtils.toString(responseEntity);
-		int statusCode = httpResponse.getStatusLine().getStatusCode();
-		EntityUtils.consume(responseEntity);
-		for (Cookie cookie : cookieStore.getCookies()) {
-			System.out.println(cookie.getName() + ":" + cookie.getValue());
-		}
-
-		System.out.println("Http status code for Request: " + statusCode);// Statue code should be 200
-		System.out.println("Response for Request: \n" + strResponse); // Should be login page
-		System.out.println("================================================================\n");
-
-		HttpGet csrfResource = new HttpGet("http://localhost:8080/csrf");
-		HttpResponse csrfResponse = httpClient.execute(csrfResource, context);
-		responseEntity = csrfResponse.getEntity();
-		strResponse = EntityUtils.toString(responseEntity);
-		statusCode = httpResponse.getStatusLine().getStatusCode();
-		EntityUtils.consume(responseEntity);
-		System.out.println("Http status code for CSRF Request: " + statusCode);// Status code should be 200
-		System.out.println("Response for CSRF Request: \n" + strResponse);// Should be actual page
-		System.out.println("================================================================\n");
-		ObjectMapper mapper = new ObjectMapper();
-		CsrfTokenBean csrfToken = mapper.readValue(strResponse, CsrfTokenBean.class);
-		System.out.println("CsrfTokenBean for CSRF Request: " + csrfToken.toString());
-		
-		return csrfToken;
-	}
-
-	public String getCookieValue(CookieStore cookieStore, String cookieName) {
-		String value = null;
-		for (Cookie cookie : cookieStore.getCookies()) {
-			System.out.println(cookie.getName() + ":" + cookie.getValue());
-			if (cookie.getName().equals(cookieName)) {
-				value = cookie.getValue();
-				break;
-			}
-		}
-		return value;
-	}
-
-	private void logout() throws IOException {
-		httpClient.close();
-	}
 
 	public static void main(String[] args) throws Exception {
 		ChatClient chatClient = new ChatClient();
-		CsrfTokenBean csrfToken = chatClient.login("u21");
-		ListenableFuture<StompSession> f = chatClient.connect(csrfToken);
+		ListenableFuture<StompSession> f = chatClient.connect();
 		StompSession stompSession = f.get();
-
 		logger.info("Sending Shout" + stompSession);
 		chatClient.sendSout(stompSession);
 		Thread.sleep(60000);
-		chatClient.logout();
 	}
 
 }
