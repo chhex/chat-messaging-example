@@ -1,13 +1,14 @@
-# Stomp Websockets Example with Java Client
+# Stomp Websockets Example with dynamic / selective Endpoints with different Clients
 
 ## General 
 
-This is a fork of https://nickebbutt/stomp-websockets-java-client added with the following aspects:
+This is a Spring Boot Websocket Example serving different clients: a Swing client using the the Spring Stomp Java Client and a Javascript client using the stomp.js libarary.
 
-  * Spring Security : Login & In Memory Authentification
-  * Selective User based notification 
-  * Optional notification to all logged in Users
- 
+One can send notifications over Stomp to all clients or selective Clients, using a unique id for each Client instance.
+
+The Websockets are unsecured, since i have'nt found out, how to use the Spring Java Stomp Client with secured Websockets.
+
+
 ## Usage
 
 1. Start /stomp-greeting-server/src/main/java/chat/TestChatServer.java
