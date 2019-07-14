@@ -20,7 +20,6 @@ public class ChatController {
 	@SendTo("/topic/shouts/all")
 	public Shout shoutToAll(ChatMessage message) throws Exception {
 		System.out.println("Sending Shout to all , message: " + message.toString());
-		Thread.sleep(3000); // simulated delay
 		return new Shout("Shouted: " + message.getChatText() + " to All!");
 
 	}
@@ -29,7 +28,6 @@ public class ChatController {
 	@SendTo("/topic/shouts/usersession.{id}")
 	public Shout shoutToSessionId(@DestinationVariable String id, ChatMessage message) throws Exception {
 		System.out.println("Sending Shout to : " + id + ", message: " + message.toString());
-		Thread.sleep(3000); // simulated delay
 		return new Shout("Shouted: " + message.getChatText() + " to " + id + "!");
 
 	}

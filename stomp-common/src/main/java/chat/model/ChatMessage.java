@@ -11,19 +11,16 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ChatMessage {
 
-    private String chatText;
-    private String to;
-   
-   	@Override
+	private String chatText;
+	private String to;
+
+	@Override
 	public String toString() {
 		return "ChatMessage [chatText=" + chatText + ", to=" + to + "]";
 	}
-   	
-   	public static class Builder {
+
+	public static class Builder {
 
 	}
-   	
-   	
-
 
 }
