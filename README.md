@@ -30,28 +30,9 @@ For the Javascript stomp.js clients
 
 For the Swing client
 
-
+1. Run  /stomp-swing-client/src/main/java/chat/ChatUi.groovy as Groovy Script
+2. Similar UI as with the browser
 
 
 ## Implementation Notes
 
-In order to recieve notifications for all and user specfic, the Stomp client must subscribe to two topics:
-
-```javascript
-stompClient.subscribe('/topic/shouts', function(shout){
-       showShout(JSON.parse(shout.body).content);
-    });
-    stompClient.subscribe('/user/topic/shouts', function(shout){
-        showShout(JSON.parse(shout.body).content);
-    });
-```
-   
-In chat.ChatController the messaging is done not with the Annotation @SendTo but using org.springframework.messaging.simp.SimpMessagingTemplate, which provides also and API for sending messages to a specific user, in order to cover both cases:
-
-```java 
-	if (all) {
-		messagingTemplate.convertAndSend(TOPIC_SHOUTS,shout);
-	} else {
-		messagingTemplate.convertAndSendToUser(message.getTo().trim(),TOPIC_SHOUTS, shout);
-	}
-```
