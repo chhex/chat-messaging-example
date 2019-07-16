@@ -1,5 +1,6 @@
 package chat;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -13,13 +14,25 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @EnableWebSocketMessageBroker
 public class WebSocketRelayConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
+	@Value("${rabbit.host}")
+	String relayHost;
+
+	@Value("${rabbit.port}")
+	Integer relayPort;
+
+	@Value("${rabbit.user}")
+	String relayHostUser;
+
+	@Value("${rabbit.pw}")
+	String relayHostPw;
+
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		StompBrokerRelayRegistration stompBrokerRelayConfig = config.enableStompBrokerRelay("/topic");
-		stompBrokerRelayConfig.setRelayHost("172.16.92.137");
-		stompBrokerRelayConfig.setRelayPort(61613);
-		stompBrokerRelayConfig.setClientLogin("admin");
-		stompBrokerRelayConfig.setClientPasscode("test");
+		stompBrokerRelayConfig.setRelayHost(relayHost);
+		stompBrokerRelayConfig.setRelayPort(relayPort);
+		stompBrokerRelayConfig.setClientLogin(relayHostUser);
+		stompBrokerRelayConfig.setClientPasscode(relayHostPw);
 		config.setApplicationDestinationPrefixes("/app");
 	}
 

@@ -1,8 +1,13 @@
-# Stomp Websockets Example with dynamic / selective Endpoints with different Clients
+# Spring Messaging Example wih Stomp Websockets & Spring amqp
 
 ## General 
 
-This is a Spring Boot Websocket Example serving different clients: a Swing client using the the Spring Stomp Java Client and a Javascript client using the stomp.js libarary.
+
+This is a Spring Boot Messaging Example serving different Websockets clients: a Swing client using the the Spring Stomp Java Client and a Javascript client using the stomp.js libarary, 
+with dynamic / selective Endpoints with different ClientExample with dynamic / selective Endpoints.  Rabbitmq is used as Relay host for the Stomp Messaging. 
+
+Also there is a Spring Boot Server, which uses Spring amqp Messaging to send & retrieve Messages to/from the same Topics as the Websocket Clients
+
 
 One can send notifications over Stomp to all clients or selective Clients, using a unique id for each Client instance.
 
@@ -34,5 +39,17 @@ For the Swing client
 2. Similar UI as with the browser
 
 
+## Preconditions 
+
+A running Rabbitmq host, with the Stomp Plugin enabled, see also https://www.rabbitmq.com/stomp.html
+
+```java
+rabbitmq-plugins enable rabbitmq_stomp
+
+```
+
+
 ## Implementation Notes
 
+
+For for Stomp Messaging, see /chat-stomp-server/src/main/java/chat/ChatController.java and /chat-stomp-server/src/main/java/chat/WebSocketRelayConfig.java

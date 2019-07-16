@@ -12,11 +12,21 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MessagingConfig {
+	
+	@Value("${rabbit.host}")
+	String rabbitHost;
+
+	@Value("${rabbit.user}")
+	String rabbitHostUser;
+
+	@Value("${rabbit.pw}")
+	String rabbitHostPw;
 
 	@Bean
 	public TopicExchange topic() {
@@ -46,9 +56,9 @@ public class MessagingConfig {
 
 	@Bean
 	public ConnectionFactory connectionFactory() {
-		CachingConnectionFactory connectionFactory = new CachingConnectionFactory("172.16.92.137");
-		connectionFactory.setUsername("admin");
-		connectionFactory.setPassword("test");
+		CachingConnectionFactory connectionFactory = new CachingConnectionFactory(rabbitHost);
+		connectionFactory.setUsername(rabbitHostUser);
+		connectionFactory.setPassword(rabbitHostPw);
 		return connectionFactory;
 	}
 
