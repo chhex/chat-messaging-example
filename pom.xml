@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.chesnb</groupId>
-    <artifactId>stomp-websockets-clients</artifactId>
+    <artifactId>chat-messaging-example</artifactId>
     <packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Stomp Websocket Clients</name>
 	<modules>
-        <module>stomp-swing-client</module>
-        <module>stomp-server</module>
-        <module>stomp-common</module>
-
+        <module>chat-stomp-swing-client</module>
+        <module>chat-stomp-server</module>
+        <module>chat-common</module>
+		<module>chat-amqp-swing-client</module>
     </modules>
 </project>

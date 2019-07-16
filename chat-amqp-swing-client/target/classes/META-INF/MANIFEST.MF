@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: amqp-swing-client
+Implementation-Version: 1.0.0-SNAPSHOT
+Built-By: chhex
+Implementation-Vendor-Id: com.chesnb
+Build-Jdk: 1.8.0_131
+Implementation-URL: http://projects.spring.io/spring-boot/chat-amqp-sw
+ ing-client/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
